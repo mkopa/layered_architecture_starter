@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const validateBookMiddleware = require("./validateBookMiddleware");
 const bookRepository = require("./bookRepository");
-const bookService = require("./bookService");
+const bookService = require("./bookService")(bookRepository);
 const {createOrUpdate, getDetails} = require("./bookController")({bookService, bookRepository});
 // choose boring technology
 // compose, compose, compose
