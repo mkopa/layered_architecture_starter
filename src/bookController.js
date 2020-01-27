@@ -7,10 +7,10 @@ module.exports = {
             const {title, authors, isbn, description} = req.body;
 
             // JS
-            const books = await bookRepository.createOrUpdate({title, authors, isbn, description});
+            await bookRepository.createOrUpdate({title, authors, isbn, description});
 
             // HTTP
-            res.json({title, authors, isbn, description});
+            res.redirect("/book/"+isbn);
         } catch (e) {
             next(e);
         }
@@ -19,7 +19,7 @@ module.exports = {
         try {
             const isbn = req.params.isbn;
 
-            const book = bookRepository.findOne(isbn);
+            const book = await bookRepository.findOne(isbn);
 
             res.json(book);
         } catch(e) {
