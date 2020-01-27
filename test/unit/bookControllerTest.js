@@ -27,4 +27,25 @@ describe("Book controller", function() {
         // then
         assert.deepStrictEqual(res.redirect.invokedWith, "/book/ISBN");
     });
+
+    it("create or update unhappy path", async function() {
+        // given
+        const req = {body: {}};
+        const res = {};
+        function next(e) {
+            next.invokedWith = e;
+        }
+        const bookService = {
+            async createOrUpdate() {
+                throw "sth bad happened";
+            }
+        };
+        const bookController = bookControllerFactory({bookService});
+
+        // when
+        await bookController.createOrUpdate(req, res, next);
+
+        // then
+        assert.deepStrictEqual(next.invokedWith, "sth bad happened");
+    });
 });
