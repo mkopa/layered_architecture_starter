@@ -27,6 +27,16 @@ module.exports = ({bookService, bookRepository}) =>
 
             const book = await bookRepository.findOne(isbn);
 
-            res.json(book);
+            res.format({
+                "text/html"() {
+                    res.send("HTML");
+                },
+                "application/json"() {
+                    res.json(book);
+                },
+                "default"() {
+                    res.json(book);
+                }
+            });
         }
     });

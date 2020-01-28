@@ -17,7 +17,10 @@ describe("Book catalog", function() {
             .set('Content-Type', 'application/json')
             .expect(302);
 
-        await client.get(createResult.header.location).expect(200, {
+        await client
+            .get(createResult.header.location)
+            .set('Accept', 'application/json')
+            .expect(200, {
             title: "JavaScript in Action",
             slug: "javascript-in-action",
             authors: ["James Smith", "Kate Donovan"],
