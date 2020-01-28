@@ -19,5 +19,11 @@ module.exports = {
         const books = await booksPromise;
         const book = await books.findOne({isbn}, {projection: {_id: false}});
         return book;
+    },
+    async findAll() {
+        const books = await booksPromise;
+        return books
+            .find()
+            .toArray();
     }
 };

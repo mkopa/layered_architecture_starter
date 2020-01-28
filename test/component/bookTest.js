@@ -6,6 +6,7 @@ describe("Book catalog", function() {
     it("should support CRUD lifecycle", async function() {
         const client = request(app);
 
+
         const createResult = await client
             .post('/book')
             .send({

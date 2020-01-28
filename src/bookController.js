@@ -24,18 +24,35 @@ module.exports = ({bookService, bookRepository}) =>
         },
         async getDetails(req, res, next) {
             const isbn = req.params.isbn;
+            const nolayout = req.query.nolayout;
+            const layout = nolayout == null ? "layout": "";
 
             const book = await bookRepository.findOne(isbn);
 
             res.format({
                 "text/html"() {
-                    res.render("book", {book, layout: "layout"});
+                    res.render("book", {book, layout});
                 },
                 "application/json"() {
                     res.json(book);
                 },
                 "default"() {
                     res.json(book);
+                }
+            });
+        },
+        async getList(req, res) {
+            const books = await bookRepository.findAll();
+
+            res.format({
+                'text/html'() {
+                    res.render("books", {books});
+                },
+                'application/json'() {
+                    res.json(books);
+                },
+                'default'() {
+                    res.json(books);
                 }
             });
         }
