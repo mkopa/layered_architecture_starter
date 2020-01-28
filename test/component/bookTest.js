@@ -4,7 +4,8 @@ const app = require("../../src/app");
 
 describe("Book catalog", function() {
     it("should support CRUD lifecycle", async function() {
-        const client = request(app);
+        const db = await require("../../src/connection");
+        const client = request(app(db));
 
 
         const createResult = await client
