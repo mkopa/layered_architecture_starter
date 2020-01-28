@@ -1,4 +1,5 @@
 const mapValues = require("lodash.mapvalues");
+const {bookLink} = require("./links");
 
 function wrapWithTryCatch(fn) {
     return function (req, res, next) {
@@ -20,7 +21,7 @@ module.exports = ({bookService, bookRepository}) =>
             await bookService.createOrUpdate({title, authors, isbn, description});
 
             // HTTP
-            res.redirect("/book/" + isbn);
+            res.redirect(bookLink(isbn));
         },
         async getDetails(req, res, next) {
             const isbn = req.params.isbn;
@@ -44,7 +45,7 @@ module.exports = ({bookService, bookRepository}) =>
 
             res.format({
                 'text/html'() {
-                    res.render("books", {books});
+                    res.render("books", {books: books.map(book => ({...book, url: bookLink(book.isbn)}))});
                 },
                 'application/json'() {
                     res.json(books);
