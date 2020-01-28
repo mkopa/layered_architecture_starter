@@ -29,7 +29,7 @@ module.exports = ({bookService, bookRepository}) =>
 
             res.format({
                 "text/html"() {
-                    res.send("HTML");
+                    res.render("book", {book, layout: "layout"});
                 },
                 "application/json"() {
                     res.json(book);
