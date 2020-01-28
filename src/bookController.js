@@ -1,6 +1,18 @@
-module.exports = ({bookService, bookRepository}) => ({
-    async createOrUpdate(req, res, next) {
-        try {
+const mapValues = require("lodash.mapvalues");
+
+function wrapWithTryCatch(fn) {
+    return function (req, res, next) {
+        return Promise.resolve(fn(req, res, next)).catch(next);
+    }
+}
+
+function withErrorHandling(api) {
+    return mapValues(api, wrapWithTryCatch);
+}
+
+module.exports = ({bookService, bookRepository}) =>
+    withErrorHandling({
+        async createOrUpdate(req, res, next) {
             // HTTP
             const {title, authors, isbn, description} = req.body;
 
@@ -8,21 +20,13 @@ module.exports = ({bookService, bookRepository}) => ({
             await bookService.createOrUpdate({title, authors, isbn, description});
 
             // HTTP
-            res.redirect("/book/"+isbn);
-        } catch (e) {
-            console.log(e);
-            next(e);
-        }
-    },
-    async getDetails(req, res, next) {
-        try {
+            res.redirect("/book/" + isbn);
+        },
+        async getDetails(req, res, next) {
             const isbn = req.params.isbn;
 
             const book = await bookRepository.findOne(isbn);
 
             res.json(book);
-        } catch(e) {
-            next(e);
         }
-    }
-});
+    });
