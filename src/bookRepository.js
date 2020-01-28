@@ -12,10 +12,15 @@ module.exports = db => {
             const book = await books.findOne({isbn}, {projection: {_id: false}});
             return book;
         },
-        async findAll() {
+        async findBy({start, limit}) {
             return books
-                .find()
+                .find({})
+                .skip(start * limit)
+                .limit(limit)
                 .toArray();
+        },
+        getCount() {
+            return books.countDocuments();
         }
     }
 };

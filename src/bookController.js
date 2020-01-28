@@ -1,5 +1,5 @@
 const mapValues = require("lodash.mapvalues");
-const {bookLink} = require("./links");
+const {bookLink, paginationLink} = require("./links");
 
 function wrapWithTryCatch(fn) {
     return function (req, res, next) {
@@ -9,6 +9,14 @@ function wrapWithTryCatch(fn) {
 
 function withErrorHandling(api) {
     return mapValues(api, wrapWithTryCatch);
+}
+
+function pagesModel(pages) {
+    return pages.map(({isCurrent, start}) => ({
+        isCurrent,
+        humanDisplay: start + 1,
+        href: paginationLink({start})
+    }));
 }
 
 module.exports = ({bookService, bookRepository}) =>
@@ -41,11 +49,13 @@ module.exports = ({bookService, bookRepository}) =>
             });
         },
         async getList(req, res) {
-            const books = await bookRepository.findAll();
+            const start = Number(req.query.start || 0);
+            const limit = 10;
+            const {books, pages} = await bookService.getList({start, limit});
 
             res.format({
                 'text/html'() {
-                    res.render("books", {books: books.map(book => ({...book, url: bookLink(book.isbn)}))});
+                    res.render("books", {pages: pagesModel(pages), books: books.map(book => ({...book, url: bookLink(book.isbn)}))});
                 },
                 'application/json'() {
                     res.json(books);

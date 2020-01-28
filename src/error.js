@@ -6,6 +6,7 @@ function notFound(req, res, next) {
 
 function error(err, req, res, next) {
     res.status(err.status || 500);
+    console.log(err);
     res.json({message: err.message, error: isDevelopment() ? err.stack : {}});
 }
 

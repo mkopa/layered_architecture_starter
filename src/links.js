@@ -5,6 +5,9 @@ const links = {
     },
     bookLink(isbn) {
         return links.resources.BOOK.replace(":isbn", isbn);
+    },
+    paginationLink({start}) {
+        return links.resources.BOOK_COLLECTION + "?start="+start;
     }
 };
 
