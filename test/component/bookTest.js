@@ -7,7 +7,6 @@ describe("Book catalog", function() {
         const db = await require("../../src/connection");
         const client = request(app(db));
 
-
         const createResult = await client
             .post('/book')
             .send({

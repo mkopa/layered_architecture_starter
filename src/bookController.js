@@ -24,14 +24,12 @@ module.exports = ({bookService, bookRepository}) =>
         },
         async getDetails(req, res, next) {
             const isbn = req.params.isbn;
-            const nolayout = req.query.nolayout;
-            const layout = nolayout == null ? "layout": "";
 
             const book = await bookRepository.findOne(isbn);
 
             res.format({
                 "text/html"() {
-                    res.render("book", {book, layout});
+                    res.render("book", {book});
                 },
                 "application/json"() {
                     res.json(book);
